@@ -7,8 +7,8 @@
         private readonly DocumentService _documentService;
         private readonly static Random rnd = new();
         public ObservableCollection<DB_Product> Products { get; set; }
-        public List<Point> Points { get; set; }
-        public DbProduct SelectedProduct { get; set; }
+        public List<Pointsget> Points { get; set; }
+        public DB_Product SelectedProduct { get; set; }
         public Point SelectedPoint { get; set; }
         public float OrderAmmount { get; set; } = 0;
         public float DiscountAmmount { get; set; } = 0;
@@ -22,9 +22,9 @@
             _documentService = documentService;
             Task.Run(async () => 
             { 
-                Products = new ObservableCollection<DbProduct>(await _productService.GetCart()); 
-                ValueCheck(); 
-                Points = await _productService.GetPoints(); 
+                Products = new ObservableCollection<DB_Product>(await _productService.GetCart()); 
+                ValueCheck();
+                Points = await _productService.GetPoints();
             });
         }
 
@@ -39,8 +39,8 @@
             UserSetting.Default.UserSurname = string.Empty;
             UserSetting.Default.UserPatronymic = string.Empty;
             UserSetting.Default.UserRole = string.Empty;
-            Global.CurrentCart.Clear();
-            _pageService.ChangePage(new SingInPage());
+            Global.Cart.Clear();
+            _pageService.ChangePage(new SignInPage());
         });
 
         public DelegateCommand RemoveCommand => new(() => 
@@ -51,19 +51,19 @@
             var index = Products.IndexOf(item);
             item.Count--;
 
-            var test = Global.CurrentCart.First(x => x.ArticleName.Equals(SelectedProduct.Article));
-            var test2 = Global.CurrentCart.IndexOf(test);
+            var test = Global.Cart.First(x => x.ArticleName.Equals(SelectedProduct.Article));
+            var test2 = Global.Cart.IndexOf(test);
 
             if (item.Count <= 0) 
             {
                 Products.Remove(SelectedProduct);
-                Global.CurrentCart.Remove(test);
+                Global.Cart.Remove(test);
             }
             else 
             {
                 Products.RemoveAt(index);
                 Products.Insert(index, item);
-                Global.CurrentCart[test2].Count--;
+                Global.Cart[test2].Count--;
             }
             ValueCheck();
         });
@@ -71,20 +71,18 @@
         public AsyncCommand CreateOrderCommand => new(async() =>
         {
             int code = rnd.Next(100, 999);
-            await _documentService.GetCheck(OrderAmmount, DiscountAmmount, SelectedPoint, code, await _productService.AddOrder(new Order
+            await _documentService.GetCheck(OrderAmmount, DiscountAmmount, SelectedPoint, code, await _productService.AddOrder(new Orderinfo
             {
                 OrderDate = DateOnly.FromDateTime(DateTime.Now),
                 OrderDeliveryDate = DateOnly.FromDateTime(DateTime.Now.AddDays(Products.FirstOrDefault(a => a.Quantity < 3) != null ? 3 : 6)),
-                OrderPickupPoint = SelectedPoint.PointId,
-                OrderFullName = FullName == "Гость" ? string.Empty : FullName,
-                OrderAmmount= OrderAmmount,
-                OrderDiscountAmmount = DiscountAmmount,
+                OrderPickupPoint = 0,/*SelectedPoint,*/
+                OrderFio = FullName == "Гость" ? string.Empty : FullName,
                 OrderCode = code,
-                OrderStatus = "Новый"
+                OrderStatus = 0
             }));
 
             Products.Clear();
-            Global.CurrentCart?.Clear();
+            Global.Cart?.Clear();
             ValueCheck();
         }, bool() => { return SelectedPoint != null && Products.Count != 0; });
         private void ValueCheck()

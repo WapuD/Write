@@ -33,10 +33,7 @@ namespace WapuD.ViewModels
                     ErrorMessageButton = string.Empty;
                     await Application.Current.Dispatcher.InvokeAsync(async () =>
                     {
-                        //if (UserSetting.Default.UserRole == "Клиент")
-                        //    _pageService.ChangePage(new BrowseProductPage());
-                        //else
-                        //    _pageService.ChangePage(new BrowseAdminPage());
+                        _pageService.ChangePage(new BrowseProductPage());
                     });
                 }
                 else
@@ -56,6 +53,9 @@ namespace WapuD.ViewModels
             if (ErrorMessage.Equals(string.Empty))
                 return true; return false;
         });
+
+
+
         public DelegateCommand SignUpCommand => new(async () => _pageService.ChangePage(new SignUpPage()));
 
     }

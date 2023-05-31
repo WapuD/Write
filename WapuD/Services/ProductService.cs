@@ -14,7 +14,7 @@
             try
             {
                 var product = await _tradeContext.Products.ToListAsync();
-                //await _tradeContext.Pnames.ToListAsync();
+                await _tradeContext.Productcategories.ToListAsync();
                 await _tradeContext.Productmanufactures.ToListAsync();
                 await Task.Run(() =>
                 {
