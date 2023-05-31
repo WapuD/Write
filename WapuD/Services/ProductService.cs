@@ -54,7 +54,7 @@
             return a;
         }
 
-        //public async Task<List<Point>> GetPoints() => await _tradeContext.Points.AsNoTracking().ToListAsync();
+        public async Task<List<Pointsget>> GetPoints() => await _tradeContext.Pointsgets.AsNoTracking().ToListAsync();
 
         public async Task<int> AddOrder(Orderinfo order)
         {
