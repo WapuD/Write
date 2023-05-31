@@ -25,7 +25,7 @@
                             Image = item.ProductPhoto == string.Empty ? "picture.png" : item.ProductPhoto,
                             Title = item.ProductName,
                             Description = item.ProductDescription,
-                            Manufacturer = item.ProductManufacturerNavigation,
+                            Manufacturer = item.ProductManufacturerNavigation.ManufactureName,
                             Price = item.ProductCost,
                             Discount = item.ProductDiscountAmount,
                             Article = item.ProductArticleNumber,
@@ -37,31 +37,31 @@
             catch { }
             return products;
         }
-        public async Task<List<DbProduct>> GetCart()
+        public async Task<List<DB_Product>> GetCart()
         {
-            List<DbProduct> a = new();
+            List<DB_Product> a = new();
             var b = await GetProducts();
 
-            foreach (var item in Global.CurrentCart)
+            foreach (var item in Global.Cart)
             {
                 var product = b.SingleOrDefault(c => c.Article.Equals(item.ArticleName));
                 if (product != null)
                 {
-                    product.Count = Global.CurrentCart.Single(a => a.ArticleName.Equals(product.Article)).Count;
+                    product.Count = Global.Cart.Single(a => a.ArticleName.Equals(product.Article)).Count;
                     a.Add(product); 
                 }
             }
             return a;
         }
 
-        public async Task<List<Point>> GetPoints() => await _tradeContext.Points.AsNoTracking().ToListAsync();
+        //public async Task<List<Point>> GetPoints() => await _tradeContext.Points.AsNoTracking().ToListAsync();
 
-        public async Task<int> AddOrder(Order order)
+        public async Task<int> AddOrder(Orderinfo order)
         {
-            await _tradeContext.Orders.AddAsync(order);
+            await _tradeContext.Orderinfos.AddAsync(order);
             await _tradeContext.SaveChangesAsync();
 
-            foreach (var item in Global.CurrentCart)
+            foreach (var item in Global.Cart)
             {
                 await _tradeContext.Orderproducts.AddAsync(new Orderproduct
                 {
@@ -74,16 +74,16 @@
 
             return order.OrderId;
         }
-        public async Task<List<Order>> GetOrders()
+        public async Task<List<Orderinfo>> GetOrders()
         {
             await _tradeContext.Orderproducts.ToListAsync();
-            return await _tradeContext.Orders.ToListAsync();
+            return await _tradeContext.Orderinfos.ToListAsync();
         }
         public async Task UpdateAmmountOrder()
         {
             await _tradeContext.Orderproducts.ToListAsync();
             await _tradeContext.Products.ToListAsync();
-            var currentList = await _tradeContext.Orders.ToListAsync();
+            var currentList = await _tradeContext.Orderinfos.ToListAsync();
 
             foreach(var item in currentList)
             {
@@ -125,11 +125,11 @@
                 Debug.WriteLine(item.OrderId + " " + test() + " " + test2());
                 //item.OrderAmmount = test();
 
-                item.OrderAmmount = (float)test();
-                await _tradeContext.SaveChangesAsync();
+                //item.OrderAmmount = (float)test();
+                //await _tradeContext.SaveChangesAsync();
 
-                item.OrderDiscountAmmount = (float)test2();
-                await _tradeContext.SaveChangesAsync();
+                //item.OrderDiscountAmmount = (float)test2();
+                //await _tradeContext.SaveChangesAsync();
             }
         }
 

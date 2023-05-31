@@ -16,7 +16,7 @@ public partial class Product
 
     public int ProductSupplier { get; set; }
 
-    public decimal ProductCost { get; set; }
+    public float ProductCost { get; set; }
 
     public int ProductDiscountAmount { get; set; }
 

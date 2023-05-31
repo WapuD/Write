@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WapuD
+﻿namespace WapuD
 {
-    internal class ViewModelLocator
+    public class ViewModelLocator
     {
         private static ServiceProvider? _provider;
         private static IConfiguration? _configuration;
