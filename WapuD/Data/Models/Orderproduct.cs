@@ -6,9 +6,9 @@ public partial class Orderproduct
 
     public string ProductArticleNumber { get; set; } = null!;
 
-    public int ProductCount { get; set; }
+    public int? ProductCount { get; set; }
 
-    public virtual Order Order { get; set; } = null!;
+    public virtual Orderinfo Order { get; set; } = null!;
 
     public virtual Product ProductArticleNumberNavigation { get; set; } = null!;
 }

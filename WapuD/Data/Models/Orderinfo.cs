@@ -1,6 +1,6 @@
 ﻿namespace WapuD.Data.Models;
 
-public partial class Order
+public partial class Orderinfo
 {
     public int OrderId { get; set; }
 
@@ -10,17 +10,13 @@ public partial class Order
 
     public int OrderPickupPoint { get; set; }
 
-    public string OrderFullName { get; set; } = null!;
+    public string? OrderFio { get; set; }
 
     public int OrderCode { get; set; }
 
-    public string OrderStatus { get; set; } = null!;
+    public int OrderStatus { get; set; }
 
-    public float OrderAmmount { get; set; }
-
-    public float OrderDiscountAmmount { get; set; }
-
-    public virtual Point OrderPickupPointNavigation { get; set; } = null!;
+    public virtual Pointsget OrderPickupPointNavigation { get; set; } = null!;
 
     public virtual ICollection<Orderproduct> Orderproducts { get; } = new List<Orderproduct>();
 }

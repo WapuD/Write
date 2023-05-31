@@ -12,17 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WapuD.Services;
-using WapuD.Views;
 
-namespace WapuD
+namespace WapuD.Views
 {
-    public partial class MainWindow : Window
+    /// <summary>
+    /// Логика взаимодействия для SignUpPage.xaml
+    /// </summary>
+    public partial class SignUpPage : Page
     {
-        public MainWindow()
+        public SignUpPage()
         {
             InitializeComponent();
-
         }
     }
 }

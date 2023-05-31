@@ -12,17 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WapuD.Services;
-using WapuD.Views;
 
-namespace WapuD
+namespace WapuD.Views
 {
-    public partial class MainWindow : Window
+    /// <summary>
+    /// Логика взаимодействия для BrowseProductPage.xaml
+    /// </summary>
+    public partial class BrowseProductPage : Page
     {
-        public MainWindow()
+        public BrowseProductPage()
         {
             InitializeComponent();
-
         }
     }
 }

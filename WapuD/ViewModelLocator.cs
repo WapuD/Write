@@ -21,18 +21,22 @@ namespace WapuD
 
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<SignInViewModel>();
+            services.AddTransient<SignUpViewModel>();
 
             services.AddSingleton<PageService>();
+            services.AddSingleton<UserService>();
+            services.AddSingleton<DocumentService>();
 
-            //services.AddDbContext<TradeContext>(options =>
-            //{
-            //    var connd = _configuration.GetConnectionString("LocalConnection");
-            //    options.UseMySql(connd, ServerVersion.AutoDetect(connd));
-            //}, ServiceLifetime.Singleton);
+            services.AddDbContext<TradeContext>(options =>
+            {
+                var connd = _configuration.GetConnectionString("LocalConnection");
+                options.UseMySql(connd, ServerVersion.AutoDetect(connd));
+            }, ServiceLifetime.Singleton);
 
             _provider = services.BuildServiceProvider();
         }
         public MainWindowViewModel? MainWindowViewModel => _provider?.GetRequiredService<MainWindowViewModel>();
         public SignInViewModel? SignInViewModel => _provider?.GetRequiredService<SignInViewModel>();
+        public SignUpViewModel? SignUpViewModel => _provider?.GetRequiredService<SignUpViewModel>();
     }
 }
