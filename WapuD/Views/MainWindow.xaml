@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WapuD"
         mc:Ignorable="d"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource ViewModelLocator}}"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="800" Width="1200">
 
     <Grid>
         <Frame NavigationUIVisibility="Hidden" 

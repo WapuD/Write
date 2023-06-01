@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,15 @@ namespace WapuD.ViewModels
                     ErrorMessageButton = string.Empty;
                     await Application.Current.Dispatcher.InvokeAsync(async () =>
                     {
-                        _pageService.ChangePage(new BrowseProductPage());
+                        MessageBox.Show(UserSetting.Default.UserRole);
+                        ErrorMessageButton = string.Empty;
+                        await Application.Current.Dispatcher.InvokeAsync(async () =>
+                        {
+                            if (UserSetting.Default.UserRole == "Клиент")
+                                _pageService.ChangePage(new BrowseProductPage());
+                            else
+                                _pageService.ChangePage(new AdminBrowseProductPage());
+                        });
                     });
                 }
                 else

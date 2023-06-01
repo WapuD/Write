@@ -1,4 +1,6 @@
-﻿namespace WapuD.Services
+﻿using WapuD.Data.Models;
+
+namespace WapuD.Services
 {
     public class ProductService
     {
@@ -6,6 +8,181 @@
         public ProductService(TradeContext tradeContext)
         {
             _tradeContext = tradeContext;
+        }
+
+        public async Task<List<DB_Product>> GetProductsAdmin()
+        {
+            List<DB_Product> products = new();
+            try
+            {
+                var product = await _tradeContext.Products.ToListAsync();
+                await _tradeContext.Productmanufactures.ToListAsync();
+                await Task.Run(() =>
+                {
+                    foreach (var item in product)
+                    {
+                        products.Add(new DB_Product
+                        {
+                            Image = item.ProductPhoto == string.Empty ? "picture.png" : item.ProductPhoto,
+                            Title = item.ProductName,
+                            Description = item.ProductDescription,
+                            Manufacturer = item.ProductManufacturerNavigation.ManufactureName,
+                            Price = item.ProductCost,
+                            Discount = item.ProductDiscountAmount,
+                            Quantity = item.ProductQuantityInStock,
+                            Article = item.ProductArticleNumber,
+                            //Count = item.Count
+                            //Status = item.ProductStatusActiv
+                        });
+                    }
+                });
+            }
+            catch { }
+            return products;
+        }
+
+        public async Task saveRedact(Orderinfo SelectedOrder, ObservableCollection<Orderinfo> Orders)
+        {
+            var item = Orders.First(i => i.OrderId == SelectedOrder.OrderId);
+            var index = Orders.IndexOf(item);
+            item.OrderDeliveryDate = DateOnly.FromDateTime(SelectedOrder.OrderDeliveryDate.ToDateTime(TimeOnly.FromDateTime(DateTime.Now)));
+            item.OrderStatus = 2;
+            Orders.RemoveAt(index);
+            Orders.Insert(index, item);
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public async Task saveNewDate(DateTime selectedDate, Orderinfo SelectedOrder, ObservableCollection<Orderinfo> Orders)
+        {
+            var item = Orders.First(i => i.OrderId == SelectedOrder.OrderId);
+            var index = Orders.IndexOf(item);
+            item.OrderDeliveryDate = DateOnly.FromDateTime(selectedDate);
+            Orders.RemoveAt(index);
+            Orders.Insert(index, item);
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public async Task deleteProduct(Product SelectedProduct, ObservableCollection<Product> Products)
+        {
+            var item = Products.First(i => i.ProductArticleNumber == SelectedProduct.ProductArticleNumber);
+            var index = Products.IndexOf(item);
+            item.ProductPhoto = "del.png";
+            //item.ProductStatusActiv = "Удален";
+            Products.RemoveAt(index);
+            Products.Insert(index, item);
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public async Task addProduct(Product SelectedProduct)
+        {
+            await _tradeContext.AddAsync(new Product
+            {   
+                ProductArticleNumber = SelectedProduct.ProductArticleNumber,
+                ProductName = SelectedProduct.ProductName,
+                ProductDescription = SelectedProduct.ProductDescription,
+                ProductCategory = SelectedProduct.ProductCategory,
+                ProductPhoto = SelectedProduct.ProductPhoto,
+                ProductManufacturer = SelectedProduct.ProductManufacturer,
+                ProductSupplier = SelectedProduct.ProductSupplier,
+                ProductCost = SelectedProduct.ProductCost,
+                ProductDiscountAmount = SelectedProduct.ProductDiscountAmount,
+                ProductDiscountMax = SelectedProduct.ProductDiscountMax,
+                ProductQuantityInStock = SelectedProduct.ProductQuantityInStock,
+                ProductUnit = SelectedProduct.ProductUnit
+                //ProductStatus = SelectedProduct.ProductStatus,
+                //ProductStatusActiv = "Активный"
+            });
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public async Task redactProduct(Product SelectedProduct, ObservableCollection<Product> Products)
+        {
+            var item = Products.First(i => i.ProductArticleNumber == SelectedProduct.ProductArticleNumber);
+            var index = Products.IndexOf(item);
+
+            item.ProductArticleNumber = SelectedProduct.ProductArticleNumber;
+            item.ProductName = SelectedProduct.ProductName;
+            item.ProductDescription = SelectedProduct.ProductDescription;
+            item.ProductCategory = SelectedProduct.ProductCategory;
+            item.ProductPhoto = SelectedProduct.ProductPhoto;
+            item.ProductManufacturer = SelectedProduct.ProductManufacturer;
+            item.ProductSupplier = SelectedProduct.ProductSupplier;
+            item.ProductCost = SelectedProduct.ProductCost;
+            item.ProductDiscountAmount = SelectedProduct.ProductDiscountAmount;
+            item.ProductDiscountMax = SelectedProduct.ProductDiscountMax;
+            item.ProductQuantityInStock = SelectedProduct.ProductQuantityInStock;
+            item.ProductUnit = SelectedProduct.ProductUnit;
+            //item.ProductStatus = SelectedProduct.ProductStatus;
+
+            Products.RemoveAt(index);
+            Products.Insert(index, item);
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public List<Productcategory> getAllCategories()
+        {
+            return _tradeContext.Productcategories.ToList();
+        }
+
+        public int getMaxCategorie()
+        {
+            return _tradeContext.Productcategories.Max(i => i.CategoryId);
+        }
+
+        public async Task addCategories(string categorie)
+        {
+            await _tradeContext.AddAsync(new Productcategory
+            {
+                CategoryId = getMaxCategorie() + 1,
+                CategoryName = categorie
+            });
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public async Task editCategorie(int SelectedCategorie, string manufacture, ObservableCollection<Productcategory> Categories)
+        {
+            var item = Categories.First(i => i.CategoryId == SelectedCategorie);
+            var index = Categories.IndexOf(item);
+
+            item.CategoryId = SelectedCategorie;
+            item.CategoryName = manufacture;
+
+            Categories.RemoveAt(index);
+            Categories.Insert(index, item);
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public List<Productmanufacture> getAllManufacrurers()
+        {
+            return _tradeContext.Productmanufactures.ToList();
+        }
+
+        public int getMaxManufacture()
+        {
+            return _tradeContext.Productmanufactures.Max(i => i.ManufactureId);
+        }
+
+        public async Task addManufature(string manufacture)
+        {
+            await _tradeContext.AddAsync(new Productmanufacture
+            {
+                ManufactureId = getMaxManufacture() + 1,
+                ManufactureName = manufacture
+            });
+            await _tradeContext.SaveChangesAsync();
+        }
+
+        public async Task editManufature(int SelectedManufacture, string manufacture, ObservableCollection<Productmanufacture> Manufacturers)
+        {
+            var item = Manufacturers.First(i => i.ManufactureId == SelectedManufacture);
+            var index = Manufacturers.IndexOf(item);
+
+            item.ManufactureId = SelectedManufacture;
+            item.ManufactureName = manufacture;
+
+            Manufacturers.RemoveAt(index);
+            Manufacturers.Insert(index, item);
+            await _tradeContext.SaveChangesAsync();
         }
 
         public async Task<List<DB_Product>> GetProducts()
@@ -89,9 +266,6 @@
             {
                 Func<float?> test = ()=> 
                 {
-                    //OrderAmmount += (item.Count * item.Price) - ((item.Count * item.Price) * item.Discount / 100);
-                    //_orderAmmount += item.Count * item.Price;
-
                     float? orderammount = 0;
                     float? _orderammount = 0;
                     foreach (var test1 in item.Orderproducts.ToList()) 
@@ -107,9 +281,6 @@
 
                 Func<float?> test2 = () =>
                 {
-                    //OrderAmmount += (item.Count * item.Price) - ((item.Count * item.Price) * item.Discount / 100);
-                    //_orderAmmount += item.Count * item.Price;
-
                     float? orderammount = 0;
                     float? _orderammount = 0;
                     foreach (var test1 in item.Orderproducts.ToList())
@@ -123,19 +294,27 @@
                     return _orderammount;
                 };
                 Debug.WriteLine(item.OrderId + " " + test() + " " + test2());
-                //item.OrderAmmount = test();
-
-                //item.OrderAmmount = (float)test();
-                //await _tradeContext.SaveChangesAsync();
-
-                //item.OrderDiscountAmmount = (float)test2();
-                //await _tradeContext.SaveChangesAsync();
             }
         }
 
-        public async Task GetListFullInformation()
+        public async Task<List<Productcategory>> getAllCategoriesObjects()
         {
-            
+            return await _tradeContext.Productcategories.ToListAsync();
+        }
+
+        public async Task<List<Productmanufacture>> getAllManufacrurersObjects()
+        {
+            return await _tradeContext.Productmanufactures.ToListAsync();
+        }
+
+        public Product getProd(string article)
+        {
+            return _tradeContext.Products.Where(i => i.ProductArticleNumber == article).First();
+        }
+
+        public ObservableCollection<Product> getAllProd()
+        {
+            return _tradeContext.Products.ToObservableCollection<Product>();
         }
     }
 }

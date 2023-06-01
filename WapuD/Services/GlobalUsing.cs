@@ -24,6 +24,7 @@ global using System.Windows.Controls;
 global using System.Globalization;
 global using System.Windows.Data;
 global using System.Windows.Media;
+global using System.Collections;
 global using System.Collections.ObjectModel;
 global using MaterialDesignColors;
 global using MaterialDesignThemes;

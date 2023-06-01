@@ -64,10 +64,16 @@
               HorizontalAlignment="Right">
 
                 <MenuItem FontFamily="{StaticResource pwsFont}">
+
+                    <MenuItem.Header>
+                        <Image Source="\Resources\Image\menu.png"
+                                Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </MenuItem.Header>
                     <MenuItem Foreground="White"
-                          Header="{Binding FullName}"
-                          IsEnabled="False"
-                          Opacity="1"/>
+                              Header="{Binding FullName}"
+                              IsEnabled="False"
+                              Opacity="1"/>
 
                     <Separator Style="{StaticResource MaterialDesignLightSeparator}"
                                Margin="10 0 10 0"/>
