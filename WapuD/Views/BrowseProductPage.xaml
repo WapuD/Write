@@ -66,7 +66,7 @@
                 <MenuItem FontFamily="{StaticResource pwsFont}">
 
                     <MenuItem.Header>
-                        <Image Source="\Resources\Image\menu.png"
+                        <Image Source="C:\Users\МОиБД\source\repos\WapuD\WapuD\Resources\Image\menu.png"
                                 Stretch="Uniform"
                                RenderOptions.BitmapScalingMode="HighQuality"/>
                     </MenuItem.Header>

@@ -1,4 +1,5 @@
-﻿namespace mvvm.ViewModels
+﻿
+namespace WapuD.ViewModels
 {
     public class EditAdminViewModel : BindableBase
     {
@@ -54,7 +55,6 @@
                 List<Productmanufacture> Manufacturers = _productService.getAllManufacrurers();   
                 List<Productcategory> Categories = _productService.getAllCategories();
 
-
                 ProductStatus = new List<string> { ("уп."), ("шт.") };
                 ProductCategory = Categories;
                 ProductManufacturer = Manufacturers;
@@ -69,8 +69,6 @@
                 List<Productmanufacture> Manufacturers = _productService.getAllManufacrurers();
                 List<Productcategory> Categories = _productService.getAllCategories();
 
-
-                
                 Product = new Product();
                 Product.ProductArticleNumber = "";
                 Product.ProductName = "";

@@ -1,4 +1,6 @@
-﻿namespace WapuD.ViewModels
+﻿using DevExpress.Mvvm.Native;
+
+namespace WapuD.ViewModels
 {
     public class BrowseProductViewModel : BindableBase
     {
@@ -35,6 +37,7 @@
             _productService = productService;
             CheckEnabled();
             SelectedFilter = "Все диапазоны";
+            UpdateProduct();
         }
 
         private void CheckEnabled() => IsEnabledCart = Global.Cart.Any(c => c.ArticleName != null);
@@ -43,19 +46,21 @@
         {
             var currentProduct = await _productService.GetProducts();
             MaxRecords = currentProduct.Count;
-
             if (!string.IsNullOrEmpty(SelectedFilter))
             {
                 switch (SelectedFilter)
                 {
+                    case "Все диапазоны":
+                        currentProduct = currentProduct.Where(p => p.Image!="del.png").ToList();
+                        break;
                     case "0-5%":
-                        currentProduct = currentProduct.Where(p => p.Discount >= 0 && p.Discount < 5).ToList();
+                        currentProduct = currentProduct.Where(p => p.Discount >= 0 && p.Discount < 5 && p.Image != "del.png").ToList();
                         break;
                     case "5-9%":
-                        currentProduct = currentProduct.Where(p => p.Discount >= 5 && p.Discount < 9).ToList();
+                        currentProduct = currentProduct.Where(p => p.Discount >= 5 && p.Discount < 9 && p.Image != "del.png").ToList();
                         break;
                     case "9% и более":
-                        currentProduct = currentProduct.Where(p => p.Discount >= 9).ToList();
+                        currentProduct = currentProduct.Where(p => p.Discount >= 9 && p.Image != "del.png").ToList();
                         break;
                 }
             }
@@ -69,9 +74,11 @@
                 {
                     case "По возрастанию":
                         currentProduct = currentProduct.OrderBy(p => p.Price).ToList();
+                        currentProduct = currentProduct.Where(p => p.Image != "del.png").ToList();
                         break;
                     case "По убыванию":
                         currentProduct = currentProduct.OrderByDescending(p => p.Price).ToList();
+                        currentProduct = currentProduct.Where(p => p.Image != "del.png").ToList();
                         break;
                 }
             }

@@ -1,6 +1,4 @@
-﻿using mvvm.ViewModels;
-
-namespace WapuD
+﻿namespace WapuD
 {
     public class ViewModelLocator
     {
@@ -16,12 +14,13 @@ namespace WapuD
             var services = new ServiceCollection();
 
             #region ViewModel
+            services.AddTransient<AdminBrowseProductViewModel>();
+            services.AddTransient<BrowseProductViewModel>();
+            services.AddTransient<CartViewModel>();
+            services.AddTransient<EditAdminViewModel>();
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<SignInViewModel>();
             services.AddTransient<SignUpViewModel>();
-            services.AddTransient<BrowseProductViewModel>();
-            services.AddTransient<AdminBrowseProductViewModel>();
-            services.AddTransient<EditAdminViewModel>();
             #endregion
 
             #region Services
@@ -43,11 +42,12 @@ namespace WapuD
 
             _provider = services.BuildServiceProvider();
         }
+        public AdminBrowseProductViewModel? AdminBrowseProductViewModel => _provider?.GetRequiredService<AdminBrowseProductViewModel>();
+        public BrowseProductViewModel? BrowseProductViewModel => _provider?.GetRequiredService<BrowseProductViewModel>();
+        public CartViewModel? CartViewModel => _provider?.GetRequiredService<CartViewModel>();
+        public EditAdminViewModel? EditAdminViewModel => _provider?.GetRequiredService<EditAdminViewModel>();
         public MainWindowViewModel? MainWindowViewModel => _provider?.GetRequiredService<MainWindowViewModel>();
         public SignInViewModel? SignInViewModel => _provider?.GetRequiredService<SignInViewModel>();
         public SignUpViewModel? SignUpViewModel => _provider?.GetRequiredService<SignUpViewModel>();
-        public BrowseProductViewModel? BrowseProductViewModel => _provider?.GetRequiredService<BrowseProductViewModel>();
-        public AdminBrowseProductViewModel? AdminBrowseProductViewModel => _provider?.GetRequiredService<AdminBrowseProductViewModel>();
-        public EditAdminViewModel? EditAdminViewModel => _provider?.GetRequiredService<EditAdminViewModel>();
     }
 }
