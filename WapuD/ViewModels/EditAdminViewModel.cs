@@ -56,6 +56,8 @@ namespace WapuD.ViewModels
                 List<Productcategory> Categories = _productService.getAllCategories();
 
                 ProductStatus = new List<string> { ("уп."), ("шт.") };
+                //ProductCategory = new List<string> { ("Бумага офисная"), ("Для офиса"), ("Тетради школьные"), ( "Школьные принадлежности" ) };
+                //ProductManufacturer = new List<string> { ("Attache"), ("Erich Krause"), ("FLEXOFFICE CANDEE"), ("GoodMark"), ("Hatber"), ("Pilot"), ("Svetocopy"), ("Unimax"), ("Комус") };
                 ProductCategory = Categories;
                 ProductManufacturer = Manufacturers;
 
@@ -78,15 +80,18 @@ namespace WapuD.ViewModels
                 Product.ProductDiscountAmount = ProductDiscountAmount;
                 Product.ProductQuantityInStock = ProductQuantityInStock;
                 ProductStatus = new List<string> { ("уп."), ("шт.") };
+                //ProductCategory = new List<string> { ("Бумага офисная"), ("Для офиса"), ("Тетради школьные"), ("Школьные принадлежности") };
+                //ProductManufacturer = new List<string> { ("Attache"), ("Erich Krause"), ("FLEXOFFICE CANDEE"), ("GoodMark"), ("Hatber"), ("Pilot"), ("Svetocopy"), ("Unimax"), ("Комус") };
                 ProductCategory = Categories;
                 ProductManufacturer = Manufacturers;
             }
+        }
 
-            }
         public DelegateCommand ReturnBackCommand => new(() =>
         {
             _pageService.ChangePage(new AdminBrowseProductPage());
         });
+
         public AsyncCommand EditCommand => new(async () =>
         {
             Product.ProductName = ProductName;
@@ -137,6 +142,5 @@ namespace WapuD.ViewModels
                 return false;
             return true;
         });
-
     }
 }
