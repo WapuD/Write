@@ -4,173 +4,314 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WapuD.Views"
-      DataContext="{Binding BrowseProductViewModel, 
-                    Source={StaticResource ViewModelLocator}}"
+      mc:Ignorable="d"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
-      Title="Просмотр товаров"
-      Background="White">
-    <Grid>
+      Title="BrowseProductPage">
+
+    <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--Меню-->
         <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0"
-                 Margin="5"
-                 FontFamily="Comic Sans MS"
-                 VerticalContentAlignment="Bottom"
-                 Style="{StaticResource pwsTextBox}"
-                 materialDesign:TextFieldAssist.HasClearButton="True"
-                 materialDesign:HintAssist.Hint="Поиск..."
-                 Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <ComboBox Grid.Column="1"
-                  Margin="5"
-                  VerticalAlignment="Bottom"
-                  materialDesign:HintAssist.Hint="Сортировка..."
-                  Style="{StaticResource pwsComboBox}"
-                  ItemsSource="{Binding Sorts}"
-                  SelectedItem="{Binding SelectedSort}"/>
-            <ComboBox Grid.Column="2"
-                  Margin="5"
-                  VerticalAlignment="Bottom"
-                  materialDesign:HintAssist.Hint="Фильтрация..."
-                  Style="{StaticResource pwsComboBox}"
-                  ItemsSource="{Binding Filters}"
-                  SelectedItem="{Binding SelectedFilter}"/>
-            <TextBlock Grid.Column="3"
-                   VerticalAlignment="Bottom"
-                   TextWrapping="Wrap"
-                   FontFamily="{StaticResource pwsFont}"
-                   HorizontalAlignment="Left">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0} из {1}">
-                        <Binding Path="Records"/>
-                        <Binding Path="MaxRecords"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-            <Menu Grid.Column="4"
-              Margin="5"
-              HorizontalAlignment="Right">
-
-                <MenuItem FontFamily="{StaticResource pwsFont}">
-                    <MenuItem Foreground="White"
-                          Header="{Binding FullName}"
-                          IsEnabled="False"
-                          Opacity="1"/>
-
-                    <Separator Style="{StaticResource MaterialDesignLightSeparator}"
-                               Margin="10 0 10 0"/>
-
-                    <MenuItem Header="Корзина"
-                          Command="{Binding CartCommand}"
-                          Foreground="White"
-                          IsEnabled="{Binding IsEnabledCart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                    <Separator Style="{StaticResource MaterialDesignLightSeparator}"
-                               Margin="10 0 10 0"/>
-
-                    <MenuItem Header="Выйти"
-                          Command="{Binding SignOutCommand}"
-                          Foreground="White"/>
-
-                </MenuItem>
-                <Menu.Resources>
-                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource pwsAccentedColor}"/>
-                </Menu.Resources>
-            </Menu>
+            <materialDesign:ColorZone
+                Padding="16"
+                Mode="PrimaryMid">
+                <DockPanel>
+                    <ToggleButton
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Right"/>
+                    <StackPanel
+                        materialDesign:RippleAssist.IsCentered="True"
+                        Orientation="Horizontal">
+                        <ToggleButton
+                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                        <materialDesign:ColorZone
+                            Margin="16,0,0,0"
+                            Padding="8,4,8,4"
+                            Panel.ZIndex="1"
+                            materialDesign:ElevationAssist.Elevation="Dp2"
+                            CornerRadius="2"
+                            Mode="Standard">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="Auto" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                    <ColumnDefinition
+                                        Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button
+                                    Style="{StaticResource MaterialDesignToolButton}">
+                                    <materialDesign:PackIcon
+                                        Kind="Search"
+                                        Opacity=".56" />
+                                </Button>
+                                <TextBox
+                                    Grid.Column="1"
+                                    MinWidth="200"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    materialDesign:HintAssist.Hint="Build a search bar"
+                                    materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                    BorderThickness="0" />
+                            </Grid>
+                        </materialDesign:ColorZone>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
         </Grid>
 
+        <!--Основное окно-->
         <Grid Grid.Row="1">
-            <ListView FontFamily="{StaticResource pwsFont}"
-                  ItemsSource="{Binding Products,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedProduct, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  HorizontalContentAlignment="Stretch"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  ScrollViewer.CanContentScroll="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MaxWidth="500"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Фильтры-->
+            <StackPanel Grid.Column="0" Margin="40,10">
+                <ListBox HorizontalAlignment="Center" x:Name="RadioButtonGroupChoiceChipPrimaryOutline" Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}">
+                    <ListBoxItem Content="Все" IsSelected="True"/>
+                    <ListBoxItem Content="Новые"/>
+                    <ListBoxItem Content="С пробегом"/>
+                </ListBox>
+                
+                <ComboBox materialDesign:HintAssist.Hint="Марка">
+                    <ComboBoxItem Content="Любая"/>
+                    <ComboBoxItem Content="Отечественные"/>
+                    <ComboBoxItem Content="Иномарки"/>
+                </ComboBox>
+                
+                <ComboBox materialDesign:HintAssist.Hint="Кузов">
+                    <ComboBoxItem Content="Седан"/>
+                    <ComboBoxItem Content="Хэтчбек"/>
+                    <ComboBoxItem Content="Внедорожники"/>
+                    <ComboBoxItem Content="Универсал"/>
+                    <ComboBoxItem Content="Купе"/>
+                    <ComboBoxItem Content="Минивэн"/>
+                    <ComboBoxItem Content="Пикап"/>
+                    <ComboBoxItem Content="Лимузин"/>
+                    <ComboBoxItem Content="Фургон"/>
+                    <ComboBoxItem Content="Кабриолет"/>
+                </ComboBox>
+
+                <ComboBox materialDesign:HintAssist.Hint="Коробка">
+                    <ComboBoxItem Content="Автомат" />
+                    <ComboBoxItem Content="Механическая" />
+                </ComboBox>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox materialDesign:HintAssist.Hint="Год от" Grid.Column="0">
+                        <ComboBoxItem Content="2023"/>
+                        <ComboBoxItem Content="2022"/>
+                        <ComboBoxItem Content="2021"/>
+                        <ComboBoxItem Content="2020"/>
+                        <ComboBoxItem Content="2019"/>
+                        <ComboBoxItem Content="2018"/>
+                        <ComboBoxItem Content="2017"/>
+                        <ComboBoxItem Content="2016"/>
+                        <ComboBoxItem Content="2015"/>
+                        <ComboBoxItem Content="2014"/>
+                        <ComboBoxItem Content="2013"/>
+                        <ComboBoxItem Content="2012"/>
+                        <ComboBoxItem Content="2011"/>
+                        <ComboBoxItem Content="2010"/>
+                        <ComboBoxItem Content="2009"/>
+                        <ComboBoxItem Content="2008"/>
+                        <ComboBoxItem Content="2007"/>
+                        <ComboBoxItem Content="2006"/>
+                        <ComboBoxItem Content="2005"/>
+                        <ComboBoxItem Content="2004"/>
+                        <ComboBoxItem Content="2003"/>
+                        <ComboBoxItem Content="2002"/>
+                        <ComboBoxItem Content="2001"/>
+                        <ComboBoxItem Content="2000"/>
+                    </ComboBox>
+                    <ComboBox materialDesign:HintAssist.Hint="Год до" Grid.Column="2">
+                        <ComboBoxItem Content="2023"/>
+                        <ComboBoxItem Content="2022"/>
+                        <ComboBoxItem Content="2021"/>
+                        <ComboBoxItem Content="2020"/>
+                        <ComboBoxItem Content="2019"/>
+                        <ComboBoxItem Content="2018"/>
+                        <ComboBoxItem Content="2017"/>
+                        <ComboBoxItem Content="2016"/>
+                        <ComboBoxItem Content="2015"/>
+                        <ComboBoxItem Content="2014"/>
+                        <ComboBoxItem Content="2013"/>
+                        <ComboBoxItem Content="2012"/>
+                        <ComboBoxItem Content="2011"/>
+                        <ComboBoxItem Content="2010"/>
+                        <ComboBoxItem Content="2009"/>
+                        <ComboBoxItem Content="2008"/>
+                        <ComboBoxItem Content="2007"/>
+                        <ComboBoxItem Content="2006"/>
+                        <ComboBoxItem Content="2005"/>
+                        <ComboBoxItem Content="2004"/>
+                        <ComboBoxItem Content="2003"/>
+                        <ComboBoxItem Content="2002"/>
+                        <ComboBoxItem Content="2001"/>
+                        <ComboBoxItem Content="2000"/>
+                    </ComboBox>
+                </Grid>
+
+                <ComboBox materialDesign:HintAssist.Hint="Двигатель">
+                    <ComboBoxItem Content="Бензин"/>
+                    <ComboBoxItem Content="Дизель"/>
+                    <ComboBoxItem Content="Гибрид"/>
+                    <ComboBoxItem Content="Электро"/>
+                </ComboBox>
+
+                <ComboBox materialDesign:HintAssist.Hint="Привод">
+                    <ComboBoxItem Content="Передний"/>
+                    <ComboBoxItem Content="Задний"/>
+                    <ComboBoxItem Content="Полный"/>
+                </ComboBox>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" BorderBrush="Black" BorderThickness="0.2" materialDesign:HintAssist.Hint="Пробег от,км"/>
+                    <TextBox Grid.Column="1" BorderBrush="Black" BorderThickness="0.2" materialDesign:HintAssist.Hint="До"/>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox materialDesign:HintAssist.Hint="Объём от,л" Grid.Column="0">
+                        <ComboBoxItem Content="0.2 л"/>
+                        <ComboBoxItem Content="0.3 л"/>
+                        <ComboBoxItem Content="0.4 л"/>
+                        <ComboBoxItem Content="0.5 л"/>
+                        <ComboBoxItem Content="0.6 л"/>
+                        <ComboBoxItem Content="0.7 л"/>
+                        <ComboBoxItem Content="0.8 л"/>
+                        <ComboBoxItem Content="0.9 л"/>
+                        <ComboBoxItem Content="1.0 л"/>
+                        <ComboBoxItem Content="1.1 л"/>
+                        <ComboBoxItem Content="1.2 л"/>
+                        <ComboBoxItem Content="1.3 л"/>
+                        <ComboBoxItem Content="1.4 л"/>
+                        <ComboBoxItem Content="1.5 л"/>
+                        <ComboBoxItem Content="1.6 л"/>
+                        <ComboBoxItem Content="1.7 л"/>
+                        <ComboBoxItem Content="1.8 л"/>
+                        <ComboBoxItem Content="1.9 л"/>
+                        <ComboBoxItem Content="2.0 л"/>
+                        <ComboBoxItem Content="2.1 л"/>
+                        <ComboBoxItem Content="2.2 л"/>
+                        <ComboBoxItem Content="2.3 л"/>
+                        <ComboBoxItem Content="2.4 л"/>
+                        <ComboBoxItem Content="2.5 л"/>
+                        <ComboBoxItem Content="2.6 л"/>
+                        <ComboBoxItem Content="2.7 л"/>
+                        <ComboBoxItem Content="2.8 л"/>
+                        <ComboBoxItem Content="2.9 л"/>
+                        <ComboBoxItem Content="3.0 л"/>
+                        <ComboBoxItem Content="3.5 л"/>
+                        <ComboBoxItem Content="4.0 л"/>
+                        <ComboBoxItem Content="4.5 л"/>
+                        <ComboBoxItem Content="5.0 л"/>
+                        <ComboBoxItem Content="5.5 л"/>
+                        <ComboBoxItem Content="6.0 л"/>
+                        <ComboBoxItem Content="7.0 л"/>
+                        <ComboBoxItem Content="8.0 л"/>
+                        <ComboBoxItem Content="9.0 л"/>
+                        <ComboBoxItem Content="10.0 л"/>
+                    </ComboBox>
+                    <ComboBox materialDesign:HintAssist.Hint="До" Grid.Column="1">
+                        <ComboBoxItem Content="0.2 л"/>
+                        <ComboBoxItem Content="0.3 л"/>
+                        <ComboBoxItem Content="0.4 л"/>
+                        <ComboBoxItem Content="0.5 л"/>
+                        <ComboBoxItem Content="0.6 л"/>
+                        <ComboBoxItem Content="0.7 л"/>
+                        <ComboBoxItem Content="0.8 л"/>
+                        <ComboBoxItem Content="0.9 л"/>
+                        <ComboBoxItem Content="1.0 л"/>
+                        <ComboBoxItem Content="1.1 л"/>
+                        <ComboBoxItem Content="1.2 л"/>
+                        <ComboBoxItem Content="1.3 л"/>
+                        <ComboBoxItem Content="1.4 л"/>
+                        <ComboBoxItem Content="1.5 л"/>
+                        <ComboBoxItem Content="1.6 л"/>
+                        <ComboBoxItem Content="1.7 л"/>
+                        <ComboBoxItem Content="1.8 л"/>
+                        <ComboBoxItem Content="1.9 л"/>
+                        <ComboBoxItem Content="2.0 л"/>
+                        <ComboBoxItem Content="2.1 л"/>
+                        <ComboBoxItem Content="2.2 л"/>
+                        <ComboBoxItem Content="2.3 л"/>
+                        <ComboBoxItem Content="2.4 л"/>
+                        <ComboBoxItem Content="2.5 л"/>
+                        <ComboBoxItem Content="2.6 л"/>
+                        <ComboBoxItem Content="2.7 л"/>
+                        <ComboBoxItem Content="2.8 л"/>
+                        <ComboBoxItem Content="2.9 л"/>
+                        <ComboBoxItem Content="3.0 л"/>
+                        <ComboBoxItem Content="3.5 л"/>
+                        <ComboBoxItem Content="4.0 л"/>
+                        <ComboBoxItem Content="4.5 л"/>
+                        <ComboBoxItem Content="5.0 л"/>
+                        <ComboBoxItem Content="5.5 л"/>
+                        <ComboBoxItem Content="6.0 л"/>
+                        <ComboBoxItem Content="7.0 л"/>
+                        <ComboBoxItem Content="8.0 л"/>
+                        <ComboBoxItem Content="9.0 л"/>
+                        <ComboBoxItem Content="10.0 л"/>
+                    </ComboBox>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" BorderBrush="Black" BorderThickness="0.2" materialDesign:HintAssist.Hint="Цена от,₽"/>
+                    <TextBox Grid.Column="1" BorderBrush="Black" BorderThickness="0.2" materialDesign:HintAssist.Hint="До"/>
+                </Grid>
+
+                <ComboBox materialDesign:HintAssist.Hint="Сортировать по">
+                    <ComboBoxItem Content="По возрастанию цены"/>
+                    <ComboBoxItem Content="По убыванию цены"/>
+                    <ComboBoxItem Content="По пробегу"/>
+                    <ComboBoxItem Content="По году: новее"/>
+                    <ComboBoxItem Content="По году: старше"/>
+                    <ComboBoxItem Content="По дате"/>
+                </ComboBox>
+
+            </StackPanel>
+
+            <!--Товары-->
+            <ListView Grid.Column="1"
+                      ItemsSource="{Binding Products,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding SelectedProduct, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      HorizontalContentAlignment="Stretch"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Добавить"
-                              Command="{Binding AddToCartCommand}"/>
+                        <MenuItem Header="Избранное"/>
+                        <MenuItem Header="Добавить в корзину"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
 
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <materialDesign:Card Background="{Binding Discount, Converter={StaticResource StringToBrushConverter}}"
-                                         Padding="8"
-                                         HorizontalContentAlignment="Stretch">
-                            <Grid HorizontalAlignment="Stretch"
-                              VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="3*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0"
-                                   Source="{Binding DisplayedImage}"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   Width="125"
-                                   Height="125"/>
-
-                                <Grid Grid.Column="1"
-                                  VerticalAlignment="Center">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Grid.Row="0"
-                                           FontWeight="Bold"
-                                           Text="{Binding Title}"/>
-                                    <TextBlock Grid.Row="1"
-                                           Text="{Binding Description}"
-                                           TextWrapping="Wrap"/>
-                                    <TextBlock Grid.Row="2"
-                                           Text="{Binding Manufacturer, StringFormat={}Производитель: {0}}"
-                                           TextWrapping="Wrap"/>
-                                    <TextBlock Grid.Row="3"
-                                           TextWrapping="Wrap">
-                                        <TextBlock.Inlines>
-                                            <Run Text="Цена:"/>
-                                            <Run Text="{Binding Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
-                                             TextDecorations="{Binding Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"/>
-                                            <Run Text="{Binding DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
-                                        </TextBlock.Inlines>
-                                    </TextBlock>
-
-                                </Grid>
-
-                                <TextBlock Grid.Column="2"
-                                       Text="{Binding Discount, StringFormat={}Скидка: {0}%}"
-                                       TextWrapping="Wrap"
-                                       VerticalAlignment="Center"/>
-                            </Grid>
-                        </materialDesign:Card>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
             </ListView>
         </Grid>
+
     </Grid>
 </Page>

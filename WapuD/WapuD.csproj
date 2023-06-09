@@ -83,4 +83,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Models\" />
+    <Folder Include="Resources\Image\" />
+  </ItemGroup>
+
 </Project>

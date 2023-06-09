@@ -10,7 +10,6 @@ global using WapuD.Views;
 global using WapuD.Assets;
 global using WapuD.Services;
 global using WapuD.ViewModels;
-global using WapuD.Data.Models;
 global using WapuD.Data.Models_DB;
 global using WapuD.Assets.Converters;
 global using System;

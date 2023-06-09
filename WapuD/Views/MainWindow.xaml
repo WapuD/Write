@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WapuD"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource ViewModelLocator}}"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="1080" Width="1920">
 
     <Grid>
-        <Frame NavigationUIVisibility="Hidden" 
-               Content="{Binding PageSource}"/>
+        <Frame NavigationUIVisibility="Hidden"
+               Content="{Binding PageSource}"
+               Grid.Row="1"/>
     </Grid>
 </Window>

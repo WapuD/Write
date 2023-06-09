@@ -1,20 +1,21 @@
-﻿namespace WapuD.Data.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace WapuD.Data.Models_DB;
 
 public partial class User
 {
-    public int UserId { get; set; }
+    public int IdUser { get; set; }
 
-    public string UserSurname { get; set; } = null!;
+    public string LoginUser { get; set; } = null!;
 
-    public string UserName { get; set; } = null!;
+    public string PasswordUser { get; set; } = null!;
 
-    public string UserPatronymic { get; set; } = null!;
+    public int RoleUser { get; set; }
 
-    public string UserLogin { get; set; } = null!;
+    public string NameUser { get; set; } = null!;
 
-    public string UserPassword { get; set; } = null!;
+    public string SurnameUser { get; set; } = null!;
 
-    public int UserRole { get; set; }
-
-    public virtual Role UserRoleNavigation { get; set; } = null!;
+    public string PatronymicUser { get; set; } = null!;
 }
